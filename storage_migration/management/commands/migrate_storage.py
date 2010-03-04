@@ -2,13 +2,12 @@ import logging
 
 from django.conf import settings
 from django.core.management.base import LabelCommand
-from django.core.files.storage import get_storage_class
+from django.core.files.storage import get_storage_class, default_storage
 from django.db.models import FileField, get_model
 
 OLD_STORAGE = getattr(settings, 'OLD_STORAGE', {})
-OLD_DEFAULT_STORAGE = getattr(settings, 'OLD_DEFAULT_STORAGE', None)
-# if OLD_DEFAULT_STORAGE is None, we get the default storage
-if OLD_DEFAULT_STORAGE is None or isinstance(OLD_DEFAULT_STORAGE, str):
+OLD_DEFAULT_STORAGE = getattr(settings, 'OLD_DEFAULT_STORAGE', default_storage)
+if isinstance(OLD_DEFAULT_STORAGE, str):
     OLD_DEFAULT_STORAGE = get_storage_class(OLD_DEFAULT_STORAGE)()
 
 class Command(LabelCommand):
