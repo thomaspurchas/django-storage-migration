@@ -30,7 +30,7 @@ class Command(LabelCommand):
                 else:
                     old_storages[field_path] = OLD_DEFAULT_STORAGE
         for instance in model_class._default_manager.all():
-            logging.debug('Handling %s' % instance)
+            logging.debug('Handling "%s"' % instance)
             # check all field names
             for fn in field_names:
                 field = getattr(instance, fn)
@@ -47,6 +47,9 @@ class Command(LabelCommand):
                     logging.info('File already exists in storage, ignoring file.')
                 else:
                     logging.info('Moving file "%s" to new storage.' % field.name)
-                    f = old_storage.open(field.name)
-                    field.storage.save(field.name, f)
+                    if not settings.DEBUG:
+                        f = old_storage.open(field.name)
+                        field.storage.save(field.name, f)
+                    else:
+                        print 'Created file: %s' % field.name
         return ''
