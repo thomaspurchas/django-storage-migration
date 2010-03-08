@@ -47,9 +47,14 @@ class Command(LabelCommand):
                     logging.info('File already exists in storage, ignoring file.')
                 else:
                     logging.info('Moving file "%s" to new storage.' % field.name)
-                    if not settings.DEBUG:
-                        f = old_storage.open(field.name)
-                        field.storage.save(field.name, f)
-                    else:
-                        print 'Created file: %s' % field.name
+                    self.move_file(field.storage, field.name)
         return ''
+
+    def move_file(self, storage, filename):
+        'Move the file between storage engines'
+        if not settings.DEBUG:
+            f = old_storage.open(filename)
+            storage.save(filename, f)
+        else:
+            print 'Created file: %s' % filename
+
