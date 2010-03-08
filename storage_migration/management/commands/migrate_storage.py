@@ -47,7 +47,11 @@ class Command(LabelCommand):
                     logging.info('File already exists in storage, ignoring file.')
                 else:
                     logging.info('Moving file "%s" to new storage.' % field.name)
-                    self.move_file(field.storage, field.name)
+                    if hasattr(field, 'names'):
+                        for name in field.names:
+                            self.move_file(field.storage, name)
+                    else:
+                        self.move_file(field.storage, field.name)
         return ''
 
     def move_file(self, storage, filename):
