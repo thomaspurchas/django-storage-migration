@@ -1,0 +1,4 @@
+2010-03-11 v0.2
+ - Help/documentation in the management command
+ - Support to overwrite files in backend
+2010-03-10 Initial release (v0.1)
