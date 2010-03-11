@@ -1,4 +1,5 @@
 import logging
+from optparse import make_option
 
 from django.conf import settings
 from django.core.management.base import LabelCommand
@@ -14,6 +15,9 @@ class Command(LabelCommand):
     args = '<app_name.Model app_name.Model2 ...>'
     label = 'model (app_name.ModelName)'
     help = 'Migrate all the FileFields on a given Model to a new Storage backend'
+    option_list = LabelCommand.option_list + (
+        make_option('--overwrite', '-f', action='store_true', dest='overwrite', help='Overwrite file that exist in the new storage backend'),
+    )
 
     def handle_label(self, label, **options):
         app_label,model_name = label.split('.')
@@ -44,7 +48,7 @@ class Command(LabelCommand):
                 elif not old_storage.exists(field.name):
                     logging.info('File doesn\'t exist in old storage, ignoring file.')
                 # check wether file alread exists in the new storage
-                elif field.storage.exists(field.name):
+                elif not options['overwrite'] and field.storage.exists(field.name):
                     logging.info('File already exists in storage, ignoring file.')
                 else:
                     logging.info('Moving file "%s" to new storage.' % field.name)
