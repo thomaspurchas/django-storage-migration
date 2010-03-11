@@ -12,7 +12,8 @@ if isinstance(OLD_DEFAULT_STORAGE, str):
 
 class Command(LabelCommand):
     args = '<app_name.Model app_name.Model2 ...>'
-    label = 'Model (app_name.ModelName)'
+    label = 'model (app_name.ModelName)'
+    help = 'Migrate all the FileFields on a given Model to a new Storage backend'
 
     def handle_label(self, label, **options):
         app_label,model_name = label.split('.')
