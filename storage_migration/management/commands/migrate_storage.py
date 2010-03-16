@@ -65,14 +65,14 @@ class Command(LabelCommand):
 
                 if field.name == '':
                     logging.debug('Field is empty, ignoring file.')
-                elif field.storage == old_storage:
+                elif new_storage == old_storage:
                     logging.debug('Same storage engine, ignoring file.')
                 # do we have multiple files?
                 elif hasattr(field, 'names'):
                     for name in field.names:
-                        self.move_file(field.storage, old_storage, name, options)
+                        self.move_file(new_storage, old_storage, name, options)
                 else:
-                    self.move_file(field.storage, old_storage, field.name, options)
+                    self.move_file(new_storage, old_storage, field.name, options)
         return ''
 
     def move_file(self, new_storage, old_storage, filename, options):
