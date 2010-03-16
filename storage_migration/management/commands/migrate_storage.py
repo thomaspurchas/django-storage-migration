@@ -47,12 +47,12 @@ class Command(LabelCommand):
                 # do we have multiple files?
                 elif hasattr(field, 'names'):
                     for name in field.names:
-                        self.move_file(field.storage, old_storage, name)
+                        self.move_file(field.storage, old_storage, name, options)
                 else:
-                    self.move_file(field.storage, old_storage, field.name)
+                    self.move_file(field.storage, old_storage, field.name, options)
         return ''
 
-    def move_file(self, new_storage, old_storage, filename):
+    def move_file(self, new_storage, old_storage, filename, options):
         'Move the file between storage engines'
         # check whether file exists in old storage
         if not old_storage.exists(filename):
