@@ -44,26 +44,27 @@ class Command(LabelCommand):
                     logging.debug('Field is empty, ignoring file.')
                 elif field.storage == old_storage:
                     logging.debug('Same storage engine, ignoring file.')
-                # check whether file exists in old storage
-                elif not old_storage.exists(field.name):
-                    logging.info('File doesn\'t exist in old storage, ignoring file.')
-                # check wether file alread exists in the new storage
-                elif not options['overwrite'] and field.storage.exists(field.name):
-                    logging.info('File already exists in storage, ignoring file.')
+                # do we have multiple files?
+                elif hasattr(field, 'names'):
+                    for name in field.names:
+                        self.move_file(field.storage, old_storage, name)
                 else:
-                    logging.info('Moving file "%s" to new storage.' % field.name)
-                    if hasattr(field, 'names'):
-                        for name in field.names:
-                            self.move_file(field.storage, old_storage, name)
-                    else:
-                        self.move_file(field.storage, old_storage, field.name)
+                    self.move_file(field.storage, old_storage, field.name)
         return ''
 
-    def move_file(self, storage, old_storage, filename):
+    def move_file(self, new_storage, old_storage, filename):
         'Move the file between storage engines'
-        if not settings.DEBUG:
-            f = old_storage.open(filename)
-            storage.save(filename, f)
+        # check whether file exists in old storage
+        if not old_storage.exists(filename):
+            logging.info('File doesn\'t exist in old storage, ignoring file.')
+        # check wether file alread exists in the new storage
+        elif not options['overwrite'] and new_storage.exists(filename):
+            logging.info('File already exists in storage, ignoring file.')
         else:
-            print 'Created file: %s' % filename
+            logging.info('Moving file "%s" to new storage.' % filename)
+            if not settings.DEBUG:
+                f = old_storage.open(filename)
+                new_storage.save(filename, f)
+            else:
+                print 'Created file: %s' % filename
 
