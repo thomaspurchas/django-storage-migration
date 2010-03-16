@@ -7,9 +7,9 @@ from django.core.files.storage import get_storage_class, default_storage
 from django.db.models import FileField, get_model
 
 OLD_STORAGE = getattr(settings, 'OLD_STORAGE', {})
-OLD_DEFAULT_STORAGE = getattr(settings, 'OLD_DEFAULT_STORAGE', default_storage)
-if isinstance(OLD_DEFAULT_STORAGE, str):
-    OLD_DEFAULT_STORAGE = get_storage_class(OLD_DEFAULT_STORAGE)()
+OLD_DEFAULT_FILE_STORAGE = getattr(settings, 'OLD_DEFAULT_FILE_STORAGE', default_storage)
+if isinstance(OLD_DEFAULT_FILE_STORAGE, str):
+    OLD_DEFAULT_FILE_STORAGE = get_storage_class(OLD_DEFAULT_FILE_STORAGE)()
 
 class Command(LabelCommand):
     args = '<app_name.Model app_name.Model2 ...>'
@@ -33,7 +33,7 @@ class Command(LabelCommand):
                 if field_path in OLD_STORAGE:
                     old_storages[field_path] = OLD_STORAGE[field_path]
                 else:
-                    old_storages[field_path] = OLD_DEFAULT_STORAGE
+                    old_storages[field_path] = OLD_DEFAULT_FILE_STORAGE
         for instance in model_class._default_manager.all():
             logging.debug('Handling "%s"' % instance)
             # check all field names
