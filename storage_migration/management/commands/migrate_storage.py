@@ -16,11 +16,6 @@ NEW_DEFAULT_FILE_STORAGE = getattr(settings, 'NEW_DEFAULT_FILE_STORAGE', default
 if isinstance(NEW_DEFAULT_FILE_STORAGE, str):
     NEW_DEFAULT_FILE_STORAGE = get_storage_class(NEW_DEFAULT_FILE_STORAGE)()
 
-NEW_STORAGE = getattr(settings, 'NEW_STORAGE', {})
-NEW_DEFAULT_FILE_STORAGE = getattr(settings, 'NEW_DEFAULT_FILE_STORAGE', default_storage)
-if isinstance(NEW_DEFAULT_FILE_STORAGE, str):
-    NEW_DEFAULT_FILE_STORAGE = get_storage_class(NEW_DEFAULT_FILE_STORAGE)()
-
 class Command(LabelCommand):
     args = '<app_name.Model app_name.Model2 ...>'
     label = 'model (app_name.ModelName)'
