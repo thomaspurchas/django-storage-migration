@@ -4,7 +4,7 @@ from distutils.core import setup
 import storage_migration
 
 setup(name='django-storage-migration',
-      version='.'.join(map(str, storage_migration.__version__)),
+      version=storage_migration.__version__,
       description=storage_migration.__doc__,
       author='City Live NV',
       author_email='gert.vangool@citylive.be',
