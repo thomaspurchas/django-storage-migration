@@ -21,17 +21,24 @@ NEW_DEFAULT_FILE_STORAGE = getattr(settings, 'NEW_DEFAULT_FILE_STORAGE', default
 if isinstance(NEW_DEFAULT_FILE_STORAGE, str):
     NEW_DEFAULT_FILE_STORAGE = get_storage_class(NEW_DEFAULT_FILE_STORAGE)()
 
+
 class Command(LabelCommand):
     args = '<app_name.Model app_name.Model2 ...>'
     label = 'model (app_name.ModelName)'
     help = __doc__
     option_list = LabelCommand.option_list + (
-        make_option('--overwrite', '-f', action='store_true', dest='overwrite', help='Overwrite file that exist in the new storage backend'),
-        make_option('--to-new', action='store_true', dest='to_new', help='Copy files from the current storage backend to the new storage backend'),
+        make_option(
+            '--overwrite', '-f', action='store_true', dest='overwrite',
+            help='Overwrite file that exist in the new storage backend'
+        ),
+        make_option(
+            '--to-new', action='store_true', dest='to_new',
+            help='Copy files from the current storage backend to the new storage backend'
+        ),
     )
 
     def handle_label(self, label, **options):
-        app_label,model_name = label.split('.')
+        app_label, model_name = label.split('.')
         model_class = get_model(app_label, model_name)
         if model_class is None:
             return 'Skipped %s. Model not found.' % label
@@ -103,4 +110,3 @@ class Command(LabelCommand):
                 new_storage.save(filename, f)
             else:
                 print 'Created file: %s' % filename
-
